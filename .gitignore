@@ -152,7 +152,7 @@ unlinked_spec.ds
 **/linux/flutter/generated_plugins.cmake
 
 .env
-
+env.dev.json
 # Coverage
 coverage/
 

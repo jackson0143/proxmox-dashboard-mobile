@@ -26,3 +26,7 @@ Fill here when done
 ## 🛡️ Security Notes
 
 - Keep Proxmox API reachable only from LAN
+
+
+- env.dev.json file in root
+.env in /backend

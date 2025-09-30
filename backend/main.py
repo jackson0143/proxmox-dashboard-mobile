@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 import httpx, os
 from dotenv import load_dotenv
@@ -13,24 +13,12 @@ DASHBOARD_API_KEY = os.getenv("DASHBOARD_API_KEY")
 if not PVE_TOKEN:
     raise RuntimeError("Set PVE_TOKEN env var: USER@REALM!tokenid=secret")
 
-client: httpx.AsyncClient | None = None
 HEADERS = {"Authorization": f"PVEAPIToken={PVE_TOKEN}"}
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    global client
-    client = httpx.AsyncClient(
-        verify=os.getenv("PVE_VERIFY", "false").lower() == "true",
-        timeout=15,
-        base_url=PVE_BASE,
-        headers=HEADERS,
-    )
-    yield
-    await client.aclose()
 
 # --- App setup ---
-app = FastAPI(title="Proxmox API", description="Proxmox API for dashboard mobile", lifespan=lifespan)
+app = FastAPI(title="Proxmox API", description="Proxmox API for dashboard mobile")
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,15 +34,28 @@ async def health():
     return {"status": "ok"}
 
 
+
 # --- Helper methods ---
-def require_dashboard_api_key(api_key: str):
-    expected_key = DASHBOARD_API_KEY
-    if api_key != expected_key:
-        raise HTTPException(status_code=401, detail="Invalid API key")
+
+def require_dashboard_api_key(
+    x_api_key: str | None = Header(None, alias="X-API-Key"),
+    api_key: str | None = None,
+):
+
+    provided = x_api_key or api_key
+    if DASHBOARD_API_KEY and provided != DASHBOARD_API_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+
+@app.get("/auth-check", dependencies=[Depends(require_dashboard_api_key)])
+async def auth_check():
+    return {"ok": True}
+
 
 async def api_get(url: str, params: dict | None = None):
     try:
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=10) as client:
             response = await client.get(url, params=params, headers=HEADERS)
             response.raise_for_status()
             return response.json()
@@ -63,7 +64,7 @@ async def api_get(url: str, params: dict | None = None):
 
 async def api_post(url: str, data: dict | None = None):
     try:
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=10) as client:
             response = await client.post(url, json=data, headers=HEADERS)
             response.raise_for_status()
             return response.json()
@@ -84,15 +85,15 @@ async def list_vms():
 
 VALID_QEMU_ACTIONS = ["reboot", "shutdown", "start", "stop"]
 VALID_LXC_ACTIONS = ["reboot", "shutdown", "start", "stop"]
-@app.post("/api/qemu/{node}/{vmid}/{action}")
-async def qemu_action(node:str, vmid:int, action:str, dependencies=[Depends(require_dashboard_api_key)]):
+@app.post("/api/qemu/{node}/{vmid}/{action}", dependencies=[Depends(require_dashboard_api_key)])
+async def qemu_action(node:str, vmid:int, action:str):
     if action not in VALID_QEMU_ACTIONS:
         raise HTTPException(status_code=400, detail=f"Invalid action: {action}. Valid actions are: {VALID_QEMU_ACTIONS}")
     url = f"{PVE_BASE}/nodes/{node}/qemu/{vmid}/status/{action}"
     return await api_post(url)
 
-@app.post("/api/lxc/{node}/{vmid}/{action}")
-async def lxc_action(node:str, vmid:int, action:str, dependencies=[Depends(require_dashboard_api_key)]):
+@app.post("/api/lxc/{node}/{vmid}/{action}", dependencies=[Depends(require_dashboard_api_key)])
+async def lxc_action(node:str, vmid:int, action:str):
     if action not in VALID_LXC_ACTIONS:
         raise HTTPException(status_code=400, detail=f"Invalid action: {action}. Valid actions are: {VALID_LXC_ACTIONS}")
     url = f"{PVE_BASE}/nodes/{node}/lxc/{vmid}/status/{action}"
