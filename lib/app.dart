@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/vm_list_page.dart';
-
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 // root widget, includes the app bar and the home page
 class MyApp extends StatelessWidget {
@@ -8,12 +8,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ShadApp(
       title: 'Proxmox Dashboard',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 51, 212, 64)),
+      theme: ShadThemeData(
+        brightness: Brightness.light,
+        colorScheme: const ShadSlateColorScheme.light(
+          background: Color(0xFFF7F7F8),
+          card: Color(0xFFFFFFFF),
+        ),
+        primaryButtonTheme: const ShadButtonTheme(
+          backgroundColor: Color(0xFF0A84FF)
+        ),
       ),
-      home: const VmListPage(),
+      darkTheme: ShadThemeData(
+        brightness: Brightness.dark,
+        colorScheme: const ShadSlateColorScheme.dark(
+          background: Color(0xFF1C1C1E),
+          card: Color(0xFF2C2C2E),
+        ),
+        primaryButtonTheme: const ShadButtonTheme(
+          backgroundColor: Color(0xFF8E8E93)
+        ),
+      ),
+      home: const ShadToaster(
+        child: VmListPage(),
+      ),
     );
   }
 }

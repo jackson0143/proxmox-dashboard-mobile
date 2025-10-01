@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/vm_services.dart';
+import '../widgets/vm_list_card.dart';
 
 class VmListPage extends StatefulWidget {
   const VmListPage({super.key});
@@ -33,12 +34,12 @@ class _VmListPageState extends State<VmListPage> {
           ? Center(child: Text(_status))
           : ListView.builder(
               itemCount: _vms.length,
+              padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
                 final vm = _vms[index];
-                return ListTile(
-                  title: Text(vm['name'] ?? 'Unnamed VM'),
-                  subtitle: Text("Status: ${vm['status']} • Node: ${vm['node']}"),
-                  trailing: Text("VMID: ${vm['vmid']}"),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: VmListCard(vm: vm, vmService: _vmService),
                 );
               },
             ),
