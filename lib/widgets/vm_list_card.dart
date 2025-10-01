@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../services/vm_services.dart';
+import '../pages/vm_details_page.dart';
 
 class VmListCard extends StatelessWidget {
   final Map<String, dynamic> vm;
@@ -65,6 +66,10 @@ class VmListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
+    final Color viewDetailsColor = isDark
+        ? const Color(0xFF64B5F6) // lighter blue for dark mode
+        : theme.colorScheme.primary; // blue from light theme
 
     return ShadCard(
       width: double.infinity,
@@ -85,41 +90,79 @@ class VmListCard extends StatelessWidget {
         ],
       ),
       footer: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          ShadTheme(
-            data: ShadTheme.of(context).copyWith(
-              primaryButtonTheme: const ShadButtonTheme(
-                backgroundColor: Color(0xFFFBBF24), // amber-400
-              ),
-            ),
-            child: ShadButton(
-              child: const Text('Reboot'),
-              onPressed: () => _performAction(context, 'reboot'),
+          Expanded(
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                SizedBox(
+                  height: 34,
+                  child: ShadTheme(
+                    data: ShadTheme.of(context).copyWith(
+                      primaryButtonTheme: const ShadButtonTheme(
+                        backgroundColor: Color(0xFFFBBF24), // amber-400
+                      ),
+                    ),
+                    child: ShadButton(
+                      child: Text('Reboot', style: ShadTheme.of(context).textTheme.small),
+                      onPressed: () => _performAction(context, 'reboot'),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 34,
+                  child: ShadTheme(
+                    data: ShadTheme.of(context).copyWith(
+                      primaryButtonTheme: const ShadButtonTheme(
+                        backgroundColor: Color(0xFFF87171), // red-400
+                      ),
+                    ),
+                    child: ShadButton(
+                      child: Text('Shutdown', style: ShadTheme.of(context).textTheme.small),
+                      onPressed: () => _performAction(context, 'shutdown'),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 34,
+                  child: ShadTheme(
+                    data: ShadTheme.of(context).copyWith(
+                      primaryButtonTheme: const ShadButtonTheme(
+                        backgroundColor: Color(0xFF34D399), // green-400
+                      ),
+                    ),
+                    child: ShadButton(
+                      child: Text('Start', style: ShadTheme.of(context).textTheme.small),
+                      onPressed: () => _performAction(context, 'start'),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 8),
-          ShadTheme(
-            data: ShadTheme.of(context).copyWith(
-              primaryButtonTheme: const ShadButtonTheme(
-                backgroundColor: Color(0xFFF87171), // red-400
+
+          //th
+          SizedBox(
+            height: 34,
+            child: ShadTheme(
+              data: ShadTheme.of(context).copyWith(
+                primaryButtonTheme: const ShadButtonTheme(
+
+                ),
               ),
-            ),
-            child: ShadButton(
-              child: const Text('Shutdown'),
-              onPressed: () => _performAction(context, 'shutdown'),
-            ),
-          ),
-          const SizedBox(width: 8),
-          ShadTheme(
-            data: ShadTheme.of(context).copyWith(
-              primaryButtonTheme: const ShadButtonTheme(
-                backgroundColor: Color(0xFF34D399), // green-400
+              child: ShadButton(
+                child: Text('View details', style: theme.textTheme.small.copyWith(color: viewDetailsColor)),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => VmDetailsPage(vm: vm),
+                    ),
+                  );
+                },
               ),
-            ),
-            child: ShadButton(
-              child: const Text('Start'),
-              onPressed: () => _performAction(context, 'start'),
             ),
           ),
         ],
