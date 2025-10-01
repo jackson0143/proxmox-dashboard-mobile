@@ -2,9 +2,12 @@ from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 import httpx, os
 from dotenv import load_dotenv
-load_dotenv()
 from contextlib import asynccontextmanager
 from pathlib import Path
+
+# Load .env from repo root
+ROOT_DIR = Path(__file__).resolve().parents[1]
+load_dotenv(dotenv_path=ROOT_DIR / ".env")
 from starlette.staticfiles import StaticFiles
 
 PVE_BASE = os.getenv("PVE_BASE") # e.g. https://pve.example.local:8006/api2/json
