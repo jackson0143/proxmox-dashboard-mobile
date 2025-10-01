@@ -10,9 +10,17 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(dotenv_path=ROOT_DIR / ".env")
 from starlette.staticfiles import StaticFiles
 
-PVE_BASE = os.getenv("PVE_BASE") # e.g. https://pve.example.local:8006/api2/json
+PVE_BASE = os.getenv("PVE_BASE") # e.g. https://pve.example.local:8006
 PVE_TOKEN = os.getenv("PVE_TOKEN") #USER@REALM!tokenid=secret
 DASHBOARD_API_KEY = os.getenv("DASHBOARD_API_KEY")
+
+if not PVE_BASE:
+    raise RuntimeError("Set PVE_BASE env var: e.g. https://pve.example.local:8006")
+
+# Ensure PVE_BASE ends with /api2/json regardless of .env value
+PVE_BASE = PVE_BASE.rstrip("/")
+if not PVE_BASE.endswith("/api2/json"):
+    PVE_BASE = f"{PVE_BASE}/api2/json"
 
 if not PVE_TOKEN:
     raise RuntimeError("Set PVE_TOKEN env var: USER@REALM!tokenid=secret")
