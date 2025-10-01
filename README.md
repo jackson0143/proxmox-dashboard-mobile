@@ -1,14 +1,11 @@
 # proxmox-mobile-dashboard
 Simple Mobile friendly dashboard for Proxmox Virtualisation Environment built with Flutter (ShadCN flutter package) and FASTAPI. Monitor your VMs and LXCs and control it easily through the mobile app.
 
-Made to simplify the main thing I use daily, might add more things if I have time. Also this is my first time using Flutter so I'm not too familiar on how things work.
-
-
-
-
+Made to simplify the main thing I use daily, might add more things if I have time. Also I have never used Flutter before so just tring it out
 
 [![Flutter](https://img.shields.io/badge/Flutter-stable-blue)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-async-green)]()
+
 
 
 ## ✨ Features (MVP)
@@ -20,7 +17,10 @@ Future features:
 - graphs/charts of performance
 - in-line clean CLI?
 - lxc/qemu preview
-  
+- create/delete containers
+
+  ![screenshot1](https://github.com/jackson0143/proxmox-dashboard-mobile/blob/main/images/screenshot1.PNG)
+![screenshot2](https://github.com/jackson0143/proxmox-dashboard-mobile/blob/main/images/screenshot2.PNG)
 ## 🛡️ Security Notes
 - Keep Proxmox API reachable only from LAN
 
