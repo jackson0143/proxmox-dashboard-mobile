@@ -4,7 +4,8 @@ import httpx, os
 from dotenv import load_dotenv
 load_dotenv()
 from contextlib import asynccontextmanager
-
+from pathlib import Path
+from starlette.staticfiles import StaticFiles
 
 PVE_BASE = os.getenv("PVE_BASE") # e.g. https://pve.example.local:8006/api2/json
 PVE_TOKEN = os.getenv("PVE_TOKEN") #USER@REALM!tokenid=secret
@@ -18,15 +19,16 @@ HEADERS = {"Authorization": f"PVEAPIToken={PVE_TOKEN}"}
 
 
 # --- App setup ---
-app = FastAPI(title="Proxmox API", description="Proxmox API for dashboard mobile")
+app = FastAPI(title="Proxmox Dashboard API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ALLOW_ORIGINS", "*").split(","),
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # --- Health check ---
 @app.get("/health")
@@ -101,3 +103,6 @@ async def lxc_action(node:str, vmid:int, action:str):
 
 
 
+
+
+# app.mount("/", StaticFiles(directory="build/web", html=True), name="webapp")
