@@ -15,7 +15,7 @@ class VmService {
 
   //POST action on a VM
   Future<dynamic> actOnVm({
-    required String type, // 'qemu' or 'lxc'
+    required String type, // qemu or lxc
     required String node,
     required int vmid,
     required String action, // reboot|shutdown|start|stop

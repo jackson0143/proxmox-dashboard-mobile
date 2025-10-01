@@ -68,8 +68,8 @@ class VmListCard extends StatelessWidget {
     final theme = ShadTheme.of(context);
     final bool isDark = theme.brightness == Brightness.dark;
     final Color viewDetailsColor = isDark
-        ? const Color(0xFF64B5F6) // lighter blue for dark mode
-        : theme.colorScheme.primary; // blue from light theme
+        ? const Color(0xFF64B5F6) 
+        : theme.colorScheme.primary; 
 
     return ShadCard(
       width: double.infinity,
@@ -102,7 +102,7 @@ class VmListCard extends StatelessWidget {
                   child: ShadTheme(
                     data: ShadTheme.of(context).copyWith(
                       primaryButtonTheme: const ShadButtonTheme(
-                        backgroundColor: Color(0xFFFBBF24), // amber-400
+                        backgroundColor: Color(0xFFFBBF24), 
                       ),
                     ),
                     child: ShadButton(
@@ -116,7 +116,7 @@ class VmListCard extends StatelessWidget {
                   child: ShadTheme(
                     data: ShadTheme.of(context).copyWith(
                       primaryButtonTheme: const ShadButtonTheme(
-                        backgroundColor: Color(0xFFF87171), // red-400
+                        backgroundColor: Color(0xFFF87171),
                       ),
                     ),
                     child: ShadButton(
@@ -130,7 +130,7 @@ class VmListCard extends StatelessWidget {
                   child: ShadTheme(
                     data: ShadTheme.of(context).copyWith(
                       primaryButtonTheme: const ShadButtonTheme(
-                        backgroundColor: Color(0xFF34D399), // green-400
+                        backgroundColor: Color(0xFF34D399), 
                       ),
                     ),
                     child: ShadButton(

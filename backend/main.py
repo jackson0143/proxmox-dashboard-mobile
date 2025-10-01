@@ -102,7 +102,4 @@ async def lxc_action(node:str, vmid:int, action:str):
     return await api_post(url)
 
 
-
-
-
 # app.mount("/", StaticFiles(directory="build/web", html=True), name="webapp")
