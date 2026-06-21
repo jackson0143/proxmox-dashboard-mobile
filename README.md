@@ -8,7 +8,7 @@ Made to simplify the main thing I use daily, might add more things if I have tim
 
 
 
-## ✨ Features (MVP)
+## Features
 - VM/LXC list with live CPU/RAM % (polling)
 - Start / Stop / Rstart options
 - Designed for iOS and Android (using Flutter)
@@ -21,8 +21,6 @@ Future features:
 
   ![screenshot1](https://github.com/jackson0143/proxmox-dashboard-mobile/blob/main/images/screenshot1.PNG)
 ![screenshot2](https://github.com/jackson0143/proxmox-dashboard-mobile/blob/main/images/screenshot2.PNG)
-## 🛡️ Security Notes
-- Keep Proxmox API reachable only from LAN
 
 
 ## Quick Start for development
